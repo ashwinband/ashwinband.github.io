@@ -8,6 +8,37 @@
     if ((a.getAttribute("href") || "").toLowerCase() === here) a.classList.add("is-on");
   });
 
+  /* ---- deep links -----------------------------------------------------
+     A hash jump (family.html#shanila) is resolved before the webfonts land.
+     Once they do, the text reflows taller and the browser never re-aims, so
+     the visitor ends up hundreds of pixels short of the profile they clicked.
+     Re-aim once things have settled. Skipped if the visitor has scrolled.
+  -------------------------------------------------------------------- */
+  (function () {
+    if (!location.hash || location.hash.length < 2) return;
+    var target;
+    try { target = document.querySelector(location.hash); } catch (e) { return; }
+    if (!target) return;
+
+    /* Cancel on a real gesture, not on a scroll-position change: the browser
+       moves the page itself while resolving the hash, and watching scrollY
+       made the correction cancel itself. */
+    var taken = false;
+    ["wheel", "touchstart", "keydown", "mousedown"].forEach(function (ev) {
+      window.addEventListener(ev, function () { taken = true; }, { passive: true, once: true });
+    });
+
+    function aim() {
+      if (taken) return;
+      target.scrollIntoView({ block: "start", behavior: "auto" });
+    }
+    aim();
+    window.addEventListener("load", aim);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(aim);
+    setTimeout(aim, 500);
+    setTimeout(aim, 1500);
+  })();
+
   /* ---- reveal on scroll ---------------------------------------------
      A plain rAF-throttled sweep rather than IntersectionObserver: the
      observer's initial pass runs before webfonts settle, so anything
@@ -33,8 +64,10 @@
     for (var i = 0; i < pending.length; i++) {
       var el = pending[i];
       var b = el.getBoundingClientRect();
-      /* visible once its top crosses 94% of the viewport and it is not past the top */
-      if (b.top < h * 0.94 && b.bottom > -40) el.classList.add("is-in");
+      /* Visible once its top crosses 94% of the viewport. No lower bound: landing
+         on a deep link (family.html#shanila) must also reveal everything the jump
+         scrolled past, or the page above the anchor stays blank. */
+      if (b.top < h * 0.94) el.classList.add("is-in");
       else keep.push(el);
     }
     pending = keep;
