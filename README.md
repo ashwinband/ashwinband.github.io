@@ -106,6 +106,31 @@ place, and breaking either will silently break them:
 Headless Chrome cannot verify this: it does not repaint after a programmatic scroll, and its
 timing under `--virtual-time-budget` varies run to run. Check it by clicking a link in a browser.
 
+## Navigation
+
+Every page carries the same menu, generated to one shape. Each top-level item
+links to a page and opens a panel of **that page's sections**; `Listen` goes
+straight out to YouTube and has no panel. Under 760px the flat `.mnav` strip
+became a **Menu** button over a panel whose rows expand to the same lists.
+
+- The open state is the class `.is-open`, set by `assets/site.js`, rather than
+  left to `:hover`/`:focus-within` alone, so pointer, keyboard and touch all
+  drive one state. The CSS keeps rules for both pseudo-classes as the fallback
+  for when the script does not load.
+- Section ids the menus point at: `#whole #album #why #ways` (index),
+  `#name #horses #shield #motto #mark` (crest),
+  `#pattern #cousins #treaty #yoke #lights #pair #living` (twins),
+  `#record #outnow #coming` (music), `#horses #voices #door` plus the four
+  profile ids (family). **Renaming one silently breaks a menu item**, so run the
+  link checker after any rename.
+- `section[id], article[id]` carry `scroll-margin-top: 5.6rem`. Without it every
+  jump lands with the heading tucked under the sticky bar.
+- Roman numerals sit in a `<span class="k">`; pages whose sections are not
+  numbered leave it empty and `.k:empty` collapses the column.
+- The resize handler closes menus only on a real **width** change. A bare resize
+  listener also fires when a phone hides its address bar, which would shut the
+  menu under the thumb reaching for it.
+
 ## Checking a change
 
 ```
@@ -113,6 +138,15 @@ google-chrome --headless=new --disable-gpu --hide-scrollbars \
   --virtual-time-budget=16000 --window-size=1400,5600 \
   --screenshot=OUT.png "file://$PWD/index.html"
 ```
+
+**The dropdown panels cannot be screenshotted without disabling transitions.**
+They open by animating `opacity`/`visibility`, and under `--virtual-time-budget`
+the timers advance but the transition clock does not, so the panel is still at
+`opacity:0` when the shot is taken and a working menu looks broken. Inject
+`<style>*,*::before,*::after{transition:none !important}</style>` into a test
+copy and drive it with `.focus()` or `.click()` from an inline script. The state
+itself is sound either way: `m.matches(".nd.is-open > .nd__m")` returns true
+while the paint still shows nothing.
 
 **Two traps that will waste your time.** First, if you copy `assets/` into a scratch directory to
 build a test page, that copy goes stale and the page you measure is not the page you edited —
