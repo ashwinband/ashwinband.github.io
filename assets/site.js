@@ -96,115 +96,45 @@
   setTimeout(request, 1400);
 })();
 
-/* ASHWIN — dropdown navigation.
-   The open state is a class set here rather than left to :hover and
-   :focus-within alone, so that pointer, keyboard and touch all drive the
-   same explicit state and it can be inspected. The CSS keeps matching
-   rules for both pseudo-classes, which is what runs if this never loads. */
+/* ASHWIN — the phone menu.
+   One button, one list of pages. Above 760px the CSS hides both and the plain
+   row of links in the topbar does the work. */
 (function () {
   "use strict";
 
-  var coarse = window.matchMedia && window.matchMedia("(hover: none)").matches;
-  var drops = Array.prototype.slice.call(document.querySelectorAll(".nd"));
+  var btn = document.getElementById("menuBtn");
+  var panel = document.getElementById("mnav");
+  if (!btn || !panel) return;
 
-  function closeAll(except) {
-    drops.forEach(function (d) { if (d !== except) d.classList.remove("is-open"); });
+  function set(open) {
+    panel.classList.toggle("is-open", open);
+    btn.setAttribute("aria-expanded", open ? "true" : "false");
   }
 
-  /* Pin a panel that would otherwise hang off the window. Measured each time
-     it opens, not once up front: the nav is laid out differently after the
-     webfonts land, and body is overflow-x:hidden, so anything past the edge
-     is clipped away rather than reachable by scrolling. */
-  function place(d) {
-    var m = d.querySelector(".nd__m");
-    if (!m) return;
-    m.classList.remove("is-left", "is-right");
-    var b = m.getBoundingClientRect(), pad = 12;
-    if (b.left < pad) m.classList.add("is-left");
-    else if (b.right > window.innerWidth - pad) m.classList.add("is-right");
-  }
+  btn.addEventListener("click", function () {
+    set(!panel.classList.contains("is-open"));
+  });
 
-  function open(d) { closeAll(d); d.classList.add("is-open"); place(d); }
-  function shut(d) { d.classList.remove("is-open"); }
-
-  drops.forEach(function (d) {
-    var top = d.querySelector(":scope > a");
-    if (!top) return;
-
-    if (!coarse) {
-      /* The panel and the bridge pseudo-element are both inside .nd, so
-         reaching for either does not count as leaving it. */
-      d.addEventListener("mouseenter", function () { open(d); });
-      d.addEventListener("mouseleave", function () { shut(d); });
-    }
-
-    d.addEventListener("focusin", function () { open(d); });
-    d.addEventListener("focusout", function (e) {
-      if (!d.contains(e.relatedTarget)) shut(d);
-    });
-
-    /* No hover on a touch screen: first tap opens, a second tap on the same
-       link follows it to the page. */
-    top.addEventListener("click", function (e) {
-      if (!coarse) return;
-      if (!d.classList.contains("is-open")) { e.preventDefault(); open(d); }
-    });
+  panel.addEventListener("click", function (e) {
+    if (e.target.closest && e.target.closest("a")) set(false);
   });
 
   document.addEventListener("keydown", function (e) {
-    if (e.key !== "Escape" && e.keyCode !== 27) return;
-    var focused = document.querySelector(".nd.is-open :focus");
-    closeAll(null);
-    if (focused && focused.blur) focused.blur();
+    if (e.key === "Escape" || e.keyCode === 27) set(false);
   });
 
   document.addEventListener("click", function (e) {
-    if (!e.target.closest || !e.target.closest(".nd")) closeAll(null);
+    if (!panel.classList.contains("is-open")) return;
+    if (e.target.closest && !e.target.closest("#mnav, #menuBtn")) set(false);
   });
 
-  /* Only a real width change closes them. A bare resize listener also fires
-     when a phone hides its address bar, which would shut the menu underneath
-     the thumb that is still reaching for it. */
+  /* Only a real width change closes it. A bare resize listener also fires when
+     a phone hides its address bar, which would shut the menu under the thumb
+     still reaching for it. */
   var lastW = window.innerWidth;
   window.addEventListener("resize", function () {
     if (window.innerWidth === lastW) return;
     lastW = window.innerWidth;
-    closeAll(null);
+    set(false);
   });
-
-  /* ---- the mobile panel ---- */
-  var btn = document.getElementById("menuBtn");
-  var panel = document.getElementById("mnav");
-
-  if (btn && panel) {
-    btn.addEventListener("click", function () {
-      var on = panel.classList.toggle("is-open");
-      btn.setAttribute("aria-expanded", on ? "true" : "false");
-    });
-  }
-
-  Array.prototype.forEach.call(document.querySelectorAll(".mn__c"), function (c) {
-    c.addEventListener("click", function () {
-      var m = document.getElementById(c.getAttribute("aria-controls"));
-      if (!m) return;
-      var on = m.classList.toggle("is-open");
-      c.setAttribute("aria-expanded", on ? "true" : "false");
-    });
-  });
-
-  /* A link into the page you are already on does not reload, so nothing else
-     would shut the panel covering the text you just asked for. */
-  if (panel) {
-    panel.addEventListener("click", function (e) {
-      var a = e.target.closest ? e.target.closest("a") : null;
-      if (!a) return;
-      var href = a.getAttribute("href") || "";
-      var here = (location.pathname.split("/").pop() || "index.html").toLowerCase();
-      var file = href.split("#")[0].toLowerCase();
-      if (href.charAt(0) === "#" || file === "" || file === here) {
-        panel.classList.remove("is-open");
-        if (btn) btn.setAttribute("aria-expanded", "false");
-      }
-    });
-  }
 })();

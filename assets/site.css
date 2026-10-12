@@ -700,133 +700,57 @@ section { padding: clamp(3.5rem, 8vw, 7rem) 0; }
 }
 
 /* ============================================================
-   dropdown navigation
-   Desktop: a panel of that page's sections opens on hover and on
-   keyboard focus. Mobile: the flat strip becomes one button and a
-   panel whose rows expand to the same lists.
+   the phone menu
+   Above 760px the nav is the plain row of links it always was. Below it
+   the links do not fit, so they live behind one button.
    ============================================================ */
 
-/* every jump target has to clear the sticky bar, or the heading you
-   clicked lands underneath it */
+/* a jump target has to clear the sticky bar, or the heading you asked for
+   lands underneath it */
 section[id], article[id] { scroll-margin-top: 5.6rem; }
 
-.nd { position: relative; }
-.nd > a::after { content: "\2009\25BE"; font-size: .78em; opacity: .55; }
-/* an invisible bridge: without it the cursor crosses the gap between
-   the link and the panel, hover drops, and the panel shuts mid-reach */
-.nd::after {
-  content: ""; position: absolute; left: -.7rem; right: -.7rem;
-  top: 100%; height: 1.1rem;
-}
-.nd__m {
-  position: absolute; z-index: 60;
-  top: calc(100% + .9rem); left: 50%;
-  transform: translateX(-50%) translateY(-.35rem);
-  min-width: 15rem; max-width: min(23rem, 84vw);
-  padding: .45rem 0; text-align: left;
-  background: color-mix(in srgb, var(--void) 93%, var(--crimson-hot));
-  border: 1px solid var(--hair);
-  box-shadow: 0 1.4rem 3rem rgba(0, 0, 0, .62);
-  opacity: 0; visibility: hidden; pointer-events: none;
-  transition: opacity .2s ease, transform .2s ease, visibility .2s;
-}
-.nd__m::before {
-  content: ""; position: absolute; left: 0; right: 0; top: 0; height: 1px;
-  background: linear-gradient(90deg, transparent, var(--gold), transparent);
-  opacity: .5;
-}
-.nd__m a {
-  display: flex; gap: .55rem; align-items: baseline;
-  padding: .46rem 1.1rem;
-  font-family: var(--body); font-size: .95rem; line-height: 1.4;
-  letter-spacing: 0; text-transform: none;
-  color: var(--parch-soft);
-  border: 0; border-left: 2px solid transparent;
-  transition: color .16s, background .16s, border-color .16s;
-}
-.nd__m a::after { content: none; }
-.nd__m a:hover, .nd__m a:focus-visible {
-  color: var(--gold-up);
-  background: color-mix(in srgb, var(--crimson-up) 52%, transparent);
-  border-left-color: var(--gold);
-}
-.nd__m .k:empty, .mn__m .k:empty { flex-basis: 0; }
-.nd__m .k {
-  flex: 0 0 1.45rem;
-  font-family: var(--display); font-size: .74rem; letter-spacing: .12em;
-  color: var(--gold-dim);
-}
-.nd.is-open > .nd__m, .nd:focus-within > .nd__m {
-  opacity: 1; visibility: visible; pointer-events: auto;
-  transform: translateX(-50%) translateY(0);
-}
-@media (hover: hover) and (min-width: 760px) {
-  .nd:hover > .nd__m {
-    opacity: 1; visibility: visible; pointer-events: auto;
-    transform: translateX(-50%) translateY(0);
-  }
-}
-/* body has overflow-x:hidden, so a panel that runs past the window is
-   clipped rather than scrollable; site.js pins the outer ones instead */
-.nd__m.is-left  { left: 0; right: auto; transform: translateX(0) translateY(-.35rem); }
-.nd__m.is-right { left: auto; right: 0; transform: translateX(0) translateY(-.35rem); }
-.nd.is-open > .nd__m.is-left,  .nd:focus-within > .nd__m.is-left,
-.nd.is-open > .nd__m.is-right, .nd:focus-within > .nd__m.is-right { transform: translateX(0) translateY(0); }
-@media (hover: hover) and (min-width: 760px) {
-  .nd:hover > .nd__m.is-left, .nd:hover > .nd__m.is-right { transform: translateX(0) translateY(0); }
-}
-
-/* ---------- the mobile panel ---------- */
 .menubtn {
-  display: inline-flex; align-items: center; gap: .5rem;
-  padding: .48rem .8rem; cursor: pointer;
+  display: none;
+  width: 2.75rem; height: 2.75rem; padding: 0; cursor: pointer;
+  align-items: center; justify-content: center;
   background: transparent; border: 1px solid var(--hair); border-radius: 2px;
   color: var(--parch-soft);
-  font-family: var(--display); font-size: .8rem;
-  letter-spacing: .2em; text-transform: uppercase;
+  transition: color .2s, border-color .2s;
 }
+@media (max-width: 759.98px) { .menubtn { display: inline-flex; } }
 .menubtn:hover { color: var(--gold-up); border-color: var(--gold); }
-.menubtn b { font-weight: 400; display: inline-block; transition: transform .22s; }
 .menubtn[aria-expanded="true"] { color: var(--gold-up); border-color: var(--gold); }
-.menubtn[aria-expanded="true"] b { transform: rotate(180deg); }
-@media (min-width: 760px) { .menubtn { display: none; } }
 
+/* three bars drawn in CSS rather than the glyph: the character renders at a
+   different weight in every font we load */
+.menubtn__b { position: relative; display: block; }
+.menubtn__b, .menubtn__b::before, .menubtn__b::after {
+  width: 1.15rem; height: 1.5px; background: currentColor;
+  transition: transform .24s ease, background .18s ease;
+}
+.menubtn__b::before, .menubtn__b::after { content: ""; position: absolute; left: 0; }
+.menubtn__b::before { top: -.4rem; }
+.menubtn__b::after  { top:  .4rem; }
+.menubtn[aria-expanded="true"] .menubtn__b { background: transparent; }
+.menubtn[aria-expanded="true"] .menubtn__b::before { transform: translateY(.4rem) rotate(45deg); }
+.menubtn[aria-expanded="true"] .menubtn__b::after  { transform: translateY(-.4rem) rotate(-45deg); }
+
+/* the strip the button opens: one page per row */
 .mnav {
-  display: none; flex-direction: column; gap: 0; flex-wrap: nowrap;
-  padding: .2rem var(--edge) .9rem; justify-content: flex-start;
+  display: none;
+  flex-direction: column; flex-wrap: nowrap; gap: 0;
+  justify-content: flex-start;
+  padding: .1rem var(--edge) .9rem;
   border-bottom: 1px solid var(--hair2);
   background: color-mix(in srgb, var(--void) 90%, var(--crimson));
 }
 .mnav.is-open { display: flex; }
 @media (min-width: 760px) { .mnav, .mnav.is-open { display: none; } }
-.mn { border-bottom: 1px solid var(--hair2); }
-.mn:last-child { border-bottom: 0; }
-.mn__row { display: flex; align-items: center; gap: .4rem; }
-.mn__row > a {
-  flex: 1 1 auto; padding: .8rem 0;
-  font-family: var(--display); font-size: .9rem;
-  letter-spacing: .2em; text-transform: uppercase; color: var(--parch-soft);
+.mnav a {
+  padding: .9rem .1rem;
+  font-size: .92rem;
+  border-bottom: 1px solid var(--hair2);
+  transition: color .18s;
 }
-.mn__row > a.is-on { color: var(--gold-up); }
-.mn__c {
-  flex: 0 0 auto; width: 2.75rem; height: 2.75rem;
-  background: transparent; border: 0; cursor: pointer;
-  color: var(--gold-dim); font-size: .95rem; line-height: 1;
-  transition: transform .22s, color .22s;
-}
-.mn__c[aria-expanded="true"] { color: var(--gold-up); transform: rotate(180deg); }
-.mn__m { display: none; padding: 0 0 .65rem; }
-.mn__m.is-open { display: block; }
-.mn__m a {
-  display: flex; gap: .5rem; align-items: baseline;
-  padding: .42rem 0 .42rem .85rem;
-  font-family: var(--body); font-size: 1rem; line-height: 1.45;
-  letter-spacing: 0; text-transform: none;
-  color: var(--parch-soft); border-left: 2px solid var(--hair2);
-}
-.mn__m a:hover { color: var(--gold-up); border-left-color: var(--gold); }
-.mn__m .k {
-  flex: 0 0 1.4rem;
-  font-family: var(--display); font-size: .72rem; letter-spacing: .12em;
-  color: var(--gold-dim);
-}
+.mnav a:last-child { border-bottom: 0; }
+.mnav a:hover, .mnav a.is-on { color: var(--gold-up); }

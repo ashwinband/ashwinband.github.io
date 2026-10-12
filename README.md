@@ -108,28 +108,24 @@ timing under `--virtual-time-budget` varies run to run. Check it by clicking a l
 
 ## Navigation
 
-Every page carries the same menu, generated to one shape. Each top-level item
-links to a page and opens a panel of **that page's sections**; `Listen` goes
-straight out to YouTube and has no panel. Under 760px the flat `.mnav` strip
-became a **Menu** button over a panel whose rows expand to the same lists.
+Above 760px the nav is the plain row of links it has always been: Home, The
+Crest, The Two Horses, Music, The Family, Listen. Below 760px those links do
+not fit, so they live behind one **hamburger button** in the topbar which opens
+`<nav class="mnav">`, the same six pages one per row. There are no dropdown
+panels and no sub-sections in the menu: one button, one list, pick a page.
 
-- The open state is the class `.is-open`, set by `assets/site.js`, rather than
-  left to `:hover`/`:focus-within` alone, so pointer, keyboard and touch all
-  drive one state. The CSS keeps rules for both pseudo-classes as the fallback
-  for when the script does not load.
-- Section ids the menus point at: `#whole #album #why #ways` (index),
-  `#name #horses #shield #motto #mark` (crest),
-  `#pattern #cousins #treaty #yoke #lights #pair #living` (twins),
-  `#record #outnow #coming` (music), `#horses #voices #door` plus the four
-  profile ids (family). **Renaming one silently breaks a menu item**, so run the
-  link checker after any rename.
-- `section[id], article[id]` carry `scroll-margin-top: 5.6rem`. Without it every
-  jump lands with the heading tucked under the sticky bar.
-- Roman numerals sit in a `<span class="k">`; pages whose sections are not
-  numbered leave it empty and `.k:empty` collapses the column.
-- The resize handler closes menus only on a real **width** change. A bare resize
-  listener also fires when a phone hides its address bar, which would shut the
-  menu under the thumb reaching for it.
+- The bars are drawn in CSS (`.menubtn__b` plus its two pseudo-elements) rather
+  than the `³0` glyph, which renders at a different weight in each face the
+  site loads. They rotate into an X while the menu is open.
+- `section[id], article[id]` carry `scroll-margin-top: 5.6rem`, so a deep link
+  such as `family.html#syed` does not land with the heading under the sticky bar.
+- The resize handler closes the menu only on a real **width** change. A bare
+  resize listener also fires when a phone hides its address bar, which would
+  shut the menu under the thumb reaching for it.
+- Section ids exist on every page (`#whole #album #why #ways`, `#name #horses
+  #shield #motto #mark`, `#pattern #cousins #treaty #yoke #lights #pair
+  #living`, `#record #outnow #coming`, `#horses #voices #door`). The menu does
+  not use them, but they are stable deep-link targets.
 
 ## Checking a change
 
@@ -139,14 +135,11 @@ google-chrome --headless=new --disable-gpu --hide-scrollbars \
   --screenshot=OUT.png "file://$PWD/index.html"
 ```
 
-**The dropdown panels cannot be screenshotted without disabling transitions.**
-They open by animating `opacity`/`visibility`, and under `--virtual-time-budget`
-the timers advance but the transition clock does not, so the panel is still at
-`opacity:0` when the shot is taken and a working menu looks broken. Inject
-`<style>*,*::before,*::after{transition:none !important}</style>` into a test
-copy and drive it with `.focus()` or `.click()` from an inline script. The state
-itself is sound either way: `m.matches(".nd.is-open > .nd__m")` returns true
-while the paint still shows nothing.
+**Anything that animates cannot be screenshotted as-is.** Under
+`--virtual-time-budget` the timers advance but the transition clock does not, so
+an element mid-transition is captured at its starting value and working UI looks
+broken. Inject `<style>*,*::before,*::after{transition:none !important}</style>`
+into a test copy and drive it with `.click()` from an inline script.
 
 **Two traps that will waste your time.** First, if you copy `assets/` into a scratch directory to
 build a test page, that copy goes stale and the page you measure is not the page you edited —
