@@ -539,7 +539,7 @@ section { padding: clamp(3.5rem, 8vw, 7rem) 0; }
 
 /* ---------- teaser cards (index → other pages) ---------- */
 .doors { display: grid; gap: 1px; background: var(--hair2); border: 1px solid var(--hair2); }
-@media (min-width: 820px) { .doors { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 820px) { .doors { grid-template-columns: repeat(2, 1fr); } }
 .door {
   position: relative; display: block; overflow: hidden;
   min-height: clamp(16rem, 26vw, 22rem);
@@ -628,3 +628,73 @@ section { padding: clamp(3.5rem, 8vw, 7rem) 0; }
   .who-link:hover { color: var(--gold-up); border-color: var(--gold-up); }
   .pillar .who .who-link { color: var(--gold); }
   .pillar .who .who-link:hover { color: var(--gold-up); }
+
+/* ---------- the comparative pages: cousins, roll, yoke ---------- */
+.cousins {
+  display: grid; gap: 1px; background: var(--hair2); border: 1px solid var(--hair2);
+  margin-top: clamp(1.8rem, 4vw, 2.8rem);
+}
+@media (min-width: 720px)  { .cousins { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1100px) { .cousins { grid-template-columns: repeat(3, 1fr); } }
+.cousin {
+  background: color-mix(in srgb, var(--void) 48%, transparent);
+  padding: clamp(1.5rem, 3vw, 2.2rem);
+}
+.cousin .where {
+  font-family: var(--display); font-size: .81rem; letter-spacing: .3em;
+  text-transform: uppercase; color: var(--gold-dim);
+}
+.cousin h3 {
+  font-size: clamp(1.45rem, 2.5vw, 1.85rem); font-weight: 400;
+  color: var(--gold-up); margin: .6rem 0 .15rem; line-height: 1.2;
+}
+.cousin .gloss { color: var(--parch-faint); font-style: italic; font-size: 1.02rem; }
+.cousin p { color: var(--parch-soft); font-size: 1.04rem; margin: 1rem 0 0; max-width: none; }
+
+.roll { list-style: none; margin: 1.8rem 0 0; padding: 0; display: grid; gap: .6rem 2.6rem; }
+@media (min-width: 700px) { .roll { grid-template-columns: repeat(2, 1fr); } }
+.roll li { position: relative; padding-left: 1.5rem; color: var(--parch-soft); font-size: 1.06rem; }
+.roll li::before {
+  content: "\25C6"; position: absolute; left: 0; top: .18em;
+  color: var(--gold-dim); font-size: .6em;
+}
+.roll li b { color: var(--parchment); font-weight: 600; }
+
+.yoke {
+  display: grid; gap: 1px; background: var(--hair2); border: 1px solid var(--hair2);
+  margin-top: clamp(1.8rem, 4vw, 2.8rem);
+}
+@media (min-width: 900px) { .yoke { grid-template-columns: repeat(2, 1fr); } }
+.yoked {
+  background: color-mix(in srgb, var(--void) 46%, transparent);
+  padding: clamp(1.5rem, 3.2vw, 2.4rem);
+  display: flex; flex-direction: column;
+}
+.yoked__img { border: 1px solid var(--hair2); overflow: hidden; }
+.yoked__img img { width: 100%; height: auto; display: block; opacity: .94; }
+.yoked .eyebrow { margin-top: 1.5rem; }
+.yoked h3 {
+  font-size: clamp(1.7rem, 3vw, 2.2rem); font-weight: 300; margin: .5rem 0 0;
+}
+.yoked .vedic {
+  font-family: var(--display); color: var(--gold); margin-top: .5rem;
+  font-size: 1.05rem; letter-spacing: .04em;
+}
+.yoked .vedic em { color: var(--parch-faint); font-size: .95em; }
+.yoked p { color: var(--parch-soft); max-width: none; }
+.yoked .last { margin-top: auto; padding-top: 1.2rem; }
+.yoked .last .k {
+  display: block; font-family: var(--display); font-size: .8rem;
+  letter-spacing: .28em; text-transform: uppercase; color: var(--gold-dim);
+  margin-bottom: .35rem;
+}
+.yoked .last p { color: var(--parchment); margin: 0; }
+
+.srcs { margin-top: clamp(2.4rem, 5vw, 3.6rem); font-size: .97rem; }
+.srcs p { font-size: .97rem; }
+
+/* five items in the top nav need a little more room */
+@media (min-width: 760px) and (max-width: 1020px) {
+  .nav { gap: 1.05rem; }
+  .nav a { font-size: .78rem; letter-spacing: .12em; }
+}
