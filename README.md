@@ -80,6 +80,22 @@ Verified with no horizontal overflow at 1385px, 485px and a true 390px viewport.
 multi-column grid collapses to one column below its breakpoint (620–900px), the nav swaps to the
 `.mnav` strip under 760px, and song art goes full-bleed on a phone.
 
+## Deep links to profiles
+
+Each profile card on `family.html` carries an id (`#syed`, `#nafees`, `#shanila`, `#samir`) and
+every name on the front page links to one. Two things keep those links landing in the right
+place, and breaking either will silently break them:
+
+- **Every `<img>` must keep its `width`/`height`.** Without them the page is short when the
+  browser resolves the hash, and the jump lands hundreds of pixels above the card.
+- **`site.js` re-aims at the hash** after webfonts settle, because the text reflows taller. It
+  cancels on a real gesture (wheel/touch/key/mousedown), never on a change in scroll position —
+  the browser moves the page itself while resolving a hash, so watching `scrollY` makes the
+  correction cancel itself.
+
+Headless Chrome cannot verify this: it does not repaint after a programmatic scroll, and its
+timing under `--virtual-time-budget` varies run to run. Check it by clicking a link in a browser.
+
 ## Checking a change
 
 ```
