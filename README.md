@@ -1,14 +1,15 @@
 # ashwin_webpage
 
-A four-page site for **ASHWIN**, the songwriting project. Hand-built, no framework,
+A five-page site for **ASHWIN**, the songwriting project. Hand-built, no framework,
 no build step: open `index.html` in a browser and it works.
 
 ## Pages
 
 | File | What it is |
 |---|---|
-| `index.html` | Full-bleed crest hero, the three pillars (music / words / voices), the album, the two released songs, and three doors into the rest |
+| `index.html` | Full-bleed crest hero, the three pillars (music / words / voices), the album, the two released songs, and four doors into the rest |
 | `crest.html` | What the name and emblem mean: the Ashwin twins, the two horses, the four quarters of the shield, the Arabic motto |
+| `twins.html` | The divine twins behind the name: the Indo-European pattern, six cousin traditions, and the two horses read as medicine and science |
 | `music.html` | সমর্পণ (Shomorpon): the record, and both released songs with full Bangla lyrics and credits |
 | `family.html` | Profiles — Syed Mehedi Hasan and Nafees Fahmi Ali, then Shanila Islam and Samir Hafiz |
 
@@ -26,7 +27,9 @@ the artwork.
 Key classes: `.hero`, `.phead`, `.sechead`, `.pillars/.pillar`, `.plate`, `.split`,
 `.band` (cinematic full-width image band), `.releases/.rel`, `.lyr` (lyrics
 disclosure), `.people/.person`, `.quarters/.quarter`, `.doors/.door`, `.gallery`,
-`.facts`, `.quote`, `.chip`, `.btn`, `.rule`.
+`.facts`, `.quote`, `.chip`, `.btn`, `.rule`, and for `twins.html` `.cousins/.cousin`
+(tradition cards), `.roll` (the list of shared traits) and `.yoke/.yoked` (the two
+horse panels).
 
 ## Images
 
@@ -48,6 +51,13 @@ Everything in `assets/img/` is generated from
   not referenced by any page. Everything else in `assets/img/` is referenced; regenerate
   any of it from `walls/` with the commands above.
 - `artist-*.jpg` — 700×700, cropped on the face. Nafees's is from `walls/nefees_pic.jpg`.
+- `horse-left.jpg` / `horse-right.jpg` — 560×690 portraits of the two rearing horses,
+  cropped out of `walls/Ashwin Heraldic Crest on Crimson Velvet.png` at `268x330+536+212`
+  and `268x330+1142+222` with a gradient fade over the bottom fifth. The crest is **not**
+  symmetric: the right-hand horse sits further left than mirroring the left one suggests.
+- `band-horses.jpg` — the door background for `twins.html`, `800x320+615+235` from the same
+  file, darkened (`-modulate 72,72`). The crop deliberately starts below the ASHWIN logotype
+  and stops above the Arabic banner: no lettering in a background image.
 
 ## Who writes first
 
@@ -117,7 +127,19 @@ that **programmatic scrolling before a headless screenshot does not repaint reli
 — render the whole page in one tall window instead (the hero is capped at `56rem`, so
 a tall window does not distort it). Check 390–500px wide too.
 
+## The mythology on `twins.html`
+
+Every claim on that page is sourced, and the sources are printed at the foot of it. The
+comparative frame is West's *Indo-European Poetry and Myth* and Mallory and Adams; the
+Vedic episodes (Vishpala's iron leg, Chyavana, Rijrashva, Bhujyu) are Rigveda 1.112–1.118
+and 10.39; Dadhichi's horse head is the Jaiminiya Brahmana version; Tacitus on the Alcis is
+*Germania* 43; Pliny on the two lights is *Natural History* 2.101. **Do not add a fact there
+without a source**, and keep the rules: *Ashwin*, never *Ashvin*; *ashwa*, never *ashva*
+(the Lithuanian `ašva` is that language's own spelling and stays); and **entities**, never
+gods.
+
 ## Publishing
 
-Not published anywhere yet. It is a plain static site, so any host works; GitHub Pages
-would be the obvious one, the same way `smhrobi.github.io` is set up.
+Live at <https://smhrobi.github.io/ashwin/> from the `main` branch of
+`github.com/smhrobi/ashwin` (legacy Pages build, root, `.nojekyll`). A push is served in
+about 30 seconds; check the public URL rather than assuming.
