@@ -167,6 +167,17 @@ gods.
 
 ## Publishing
 
-Live at <https://smhrobi.github.io/ashwin/> from the `main` branch of
-`github.com/smhrobi/ashwin` (legacy Pages build, root, `.nojekyll`). A push is served in
+Live at <https://ashwinband.github.io/> from the `main` branch of
+`github.com/ashwinband/ashwinband.github.io` (legacy Pages build, root, `.nojekyll`). A push is served in
 about 30 seconds; check the public URL rather than assuming.
+
+Moved here on 19 October 2026 from `smhrobi/ashwin`, which served at
+`smhrobi.github.io/ashwin/`. Two things about that move are worth keeping in mind:
+
+- **The repo name must stay exactly `ashwinband.github.io`.** That string is what makes
+  Pages serve the site at the root. Rename the repo to anything else and the whole site
+  drops back to a `/<reponame>/` subpath, breaking every link anyone has saved.
+- **The old address is dead and cannot be revived.** GitHub redirects repository web
+  URLs after a transfer but it does **not** redirect Pages URLs, so
+  `smhrobi.github.io/ashwin/` now 404s. The personal site's two links to it were
+  updated in the same commit.
